@@ -39,10 +39,10 @@ doc.ready(function()
 	
 				   });
 
-function CreateLayers(count)
+function CreateLayers(p_count)
 {
 	
-	for(i=0;i<count;i++)
+	for(i=0;i<p_count;i++)
 	{
 		containerName = "layerDiv_"+i;
 		$("#main").append("<div id='"+containerName+"'></div>");
@@ -50,11 +50,11 @@ function CreateLayers(count)
 		$("#"+containerName).css(prefix + "perspective","200px");	
 		for(j=0;j<10;j++)
 		{
-			id = containerName+"_"+i;
+			id = containerName+"_"+j;
 			$("#"+containerName).append("<div class='"+containerName+"' id='"+id+"'></div>");
 		}
 		
-		$("."+containerName).each(ChangeDiv);
+			$("."+containerName).each(ChangeDiv);
 	}
 	
 }
@@ -141,8 +141,8 @@ function ChangeDiv()
   	'timing-function': 'ease-in',
  	 duration: '2s'
 	}).translate({
-		x:(leftPos/parseInt($(this).css('width')))*100,
-		y:(topPos/parseInt($(this).css('height')))*100
+		x:(leftPos/parseInt($(this).width()))*100,
+		y:(topPos/parseInt($(this).height()))*100
 	});
 			 
 			 //$(this).mouseover(Rotate);
