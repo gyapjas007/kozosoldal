@@ -2,6 +2,7 @@
 
 doc = $(document);
 var rainDrops = [];
+var colors=[];
 var prefix = "";
 
 doc.ready(function()
@@ -14,6 +15,7 @@ doc.ready(function()
 		prefix = "-moz-";
 		
 	div = $("#main");
+	$("#main").css(prefix + "perspective","200px");	
 	
 	if(div==null)
 	{
@@ -41,13 +43,24 @@ doc.ready(function()
 
 function CreateLayers(p_count)
 {
+	colors.push("blue");
+	colors.push("violet");
+	colors.push("brown");
 	
 	for(i=0;i<p_count;i++)
 	{
 		containerName = "layerDiv_"+i;
 		$("#main").append("<div id='"+containerName+"'></div>");
 			
-		$("#"+containerName).css(prefix + "perspective","200px");	
+		//$("#"+containerName).css(prefix + "perspective","200px");
+		var Z_3d = 5+i*(-100);
+		ZZ=Z_3d+"px";	
+		$("#"+containerName).css(prefix + "transform","translateZ("+ZZ+")");
+		$("#"+containerName).css("border","3px dashed "+colors[i]);
+		$("#"+containerName).css("position","absolute");
+		$("#"+containerName).width($("#"+containerName).parent().width());
+		$("#"+containerName).height($("#"+containerName).parent().height());
+		
 		for(j=0;j<10;j++)
 		{
 			id = containerName+"_"+j;
@@ -57,7 +70,7 @@ function CreateLayers(p_count)
 			$("."+containerName).each(ChangeDiv);
 	}
 	
-}
+} 
 
 function ChangeDiv()
 {
@@ -71,8 +84,9 @@ function ChangeDiv()
 		
 			divider = 1;//layerNo;
 
-			var Z_3d = 5+layerNo*-100;
-			ZZ=Z_3d;
+			//var Z_3d = 5+layerNo*-100;
+			//ZZ=Z_3d;
+		
 		
 			
 			var topPos = Math.floor((Math.random()*350));
@@ -89,7 +103,7 @@ function ChangeDiv()
 			 $(this).css("width",myW);
 			 $(this).css("height",myheight );
 			 
-			 //$(this).animate({left:leftPos+"px", top:topPos+"px"},1000,"linear");
+			 $(this).animate({left:leftPos+"px", top:topPos+"px"},1000,"linear");
 			
 			 //$(this).css( prefix+"transform","translate3d("+leftPos+"px,"+topPos+"px,"+ZZ+"px)");
 			 //cssProperty = prefix+"transform";
@@ -116,8 +130,11 @@ function ChangeDiv()
 //  			arr = matrix2Array(transform);
 			 
 //			 $(this).css("-moz-transform","translate3d("+leftPos+"px,"+topPos+"px,"+ZZ+")");
-//			 $(this).css("-moz-transform","translateX("+leftPos+"px");			 
-			 $(this).css("background-color","#487B9A");
+//			 $(this).css("-moz-transform","translateX("+leftPos+"px");
+			 
+			 //$(this).css("background-color","#487B9A");
+			 $(this).css("background-color",colors[layerNo]);
+			 
 			 var myText =[];
 			 //$(this).attr('id','raindrop'+index)
 			 myText.push($(this).attr('id'));
@@ -136,14 +153,14 @@ function ChangeDiv()
 			 
 			 //$("'#"+$(this).attr('id')+"'").setTransition({
 																											
-			 $(this).setTransition({
+			/* $(this).setTransition({
   	property: 'transform',
   	'timing-function': 'ease-in',
  	 duration: '2s'
 	}).translate({
 		x:(leftPos/parseInt($(this).width()))*100,
 		y:(topPos/parseInt($(this).height()))*100
-	});
+	});*/
 			 
 			 //$(this).mouseover(Rotate);
 			 //$(this).click({top:topPos,left:(leftPos+6), height:myheight},ShowmyDiv);
@@ -155,33 +172,45 @@ function onScrolled(event, delta)
 {
 scrollPos = delta;
 
-for(i=0;i<2;i++)
+for(i=0;i<3;i++)
 	{
-		containerName = "layerDiv_"+i;
-		
+		containerName = "layerDiv_"+i;		
 			
+		myPerspective =	$("#"+containerName).css(prefix + "transform");
+		myPerspectiveArr = matrix2Array(myPerspective);
+		
+		var transZ = 0;
+		if(myPerspectiveArr.length==16)
+			transZ = parseInt(myPerspectiveArr[14]);
+			
+		transZ+=10*delta;
+		$("#"+containerName).css(prefix + "transform","translateZ("+transZ+"px)");
+		
+		/*	
 		$("."+containerName).each(function(delta)
-										   {
-											   transform = $(this).css(prefix + "transform");
-											   if(transform == "none")
-  {
-  	alert("Empty transform array");
-  }
-											   arr = matrix2Array(transform);
+		{
+			transform = $(this).css(prefix + "transform");
+			if(transform == "none")
+  			{
+  				alert("Empty transform array");
+  			}
+			arr = matrix2Array(transform);
 											   
-											   newX = (delta/parseInt($(this).css('width')))*100;
-											   
-											  $(this).setTransition({
-  	property: 'transform',
-  	'timing-function': 'ease-in',
- 	 duration: '2s'
-	}).translate({
-		x:newX,
-		y:(delta/parseInt($(this).css('height')))*100
-	}); 
-}
-);
-}
+			newX = (delta/parseInt($(this).width()))*100;
+							   
+			$(this).setTransition({
+  				property: 'transform',
+  				'timing-function': 'ease-in',
+ 	 			duration: '2s'
+				}).translate({
+					x:newX,
+					y:(delta/parseInt($(this).css('height')))*100
+					}); 
+		}
+		);
+		*/
+	}
+	
 }
 
 	
