@@ -1,9 +1,17 @@
 // JavaScript Document
 
-doc = $(document);
+var doc = $(document);
+var prefix = "";
+
 var rainDrops = [];
 var colors=[];
-var prefix = "";
+
+var layerCount = 3;
+var rainDropW = 6;
+
+var intervalList=[];
+
+var showDivDisabled=false;
 
 doc.ready(function()
 	{
@@ -14,7 +22,7 @@ doc.ready(function()
 	if(k=="Firefox")
 		prefix = "-moz-";
 		
-	div = $("#main");
+	var div = $("#main");
 	$("#main").css(prefix + "perspective","200px");	
 	$("body").mousemove(function(e){
 		/*$("#main").show('slow',function(){
@@ -37,7 +45,7 @@ doc.ready(function()
 	
 	div.html("");
 	
-	CreateLayers(3);	
+	CreateLayers(layerCount);	
 	
 	//div.append("<div id='displayTitle'></div>");	
 	div.mousewheel(function(event, delta){
@@ -54,13 +62,13 @@ function CreateLayers(p_count)
 	
 	for(i=0;i<p_count;i++)
 	{
-		containerName = "layerDiv_"+i;
+		var containerName = "layerDiv_"+i;
 		$("#main").append("<div id='"+containerName+"'></div>");
 			
 		//$("#"+containerName).css(prefix + "perspective","200px");
 		
 		var Z_3d = 5+i*(-200);
-		ZZ=Z_3d+"px";
+		var ZZ=Z_3d+"px";
 			
 		$("#"+containerName).css(prefix + "transform","translateZ("+ZZ+")");
 		$("#"+containerName).css("border","3px dashed "+colors[i]);
@@ -70,7 +78,7 @@ function CreateLayers(p_count)
 		
 		for(j=0;j<10;j++)
 		{
-			id = containerName+"_"+j;
+			var id = containerName+"_"+j;
 			
 			$("#"+containerName).append("<div id=draggableStack_"+id+" class="+containerName+"></div>");
 			$("#draggableStack_"+id).append("<div id="+id+"></div>");
@@ -82,7 +90,7 @@ function CreateLayers(p_count)
 			
 		for(j=0;j<10;j++)
 		{
-			id = containerName+"_"+j;
+			var id = containerName+"_"+j;
 			$("#draggableStack_"+id).draggable({
 			start: function(){
 				showDivDisabled=true;
@@ -95,72 +103,33 @@ function CreateLayers(p_count)
 			});
 			
 		}	
-	}
-	
+		
+	}	
 } 
 
-var showDivDisabled=false;
-
 function ChangeDiv()
-{
-	
-		rainDropW = 6;
-		
-		myclass = $(this).attr('class');
+{				
+		var myclass = $(this).attr('class');
 		
 		var layerNoStr = myclass.substr(myclass.length-1,1);
-		layerNo = parseInt(layerNoStr);
+		var layerNo = parseInt(layerNoStr);
 		
-			divider = 1;//layerNo;
+		var	divider = 1;//layerNo;
 
-			//var Z_3d = 5+layerNo*-100;
-			//ZZ=Z_3d;
-		
-		
-			
-			var topPos = Math.floor((Math.random()*350));
+		var topPos = Math.floor((Math.random()*350));
 		var leftPos = Math.floor((Math.random()*700)+1);
 		
 		var myheight = 100/divider;
 		var myW = rainDropW/divider;
 		
 			 $(this).css("position", "absolute");
-			 //pos = index*20;
-			 
-			 // $(this).css("left",leftPos );
-			 // $(this).css("top",topPos );
+			
 			 $(this).css("width",myW);
 			 $(this).css("height",myheight );
 			 
 			 $(this).animate({left:leftPos+"px", top:topPos+"px"},1000,"linear");
 			
-			//$(this).draggable();
-			 //$(this).css( prefix+"transform","translate3d("+leftPos+"px,"+topPos+"px,"+ZZ+"px)");
-			 //cssProperty = prefix+"transform";
-			 cssValue = "translateY("+leftPos+"px) translateX("+topPos+"px)";// translateZ("+ZZ+"px)";
-			 //$(this).animate({transform:cssValue},1000, "linear");
-
-			 
-//			 
-//			 transition.set({
-//  property: 'transform',
-//  duration: '1000ms'
-//});	 			
-//			 transform.translate({
-//    x: leftPos,
-//    y: topPos
-//});
-			 
-			 //transform = $(this).css(prefix + "transform");
-//  			if(transform == "none")
-//  			{
-//  				alert("Empty transform array");
-//  			}
-// 		 
-//  			arr = matrix2Array(transform);
-			 
-//			 $(this).css("-moz-transform","translate3d("+leftPos+"px,"+topPos+"px,"+ZZ+")");
-//			 $(this).css("-moz-transform","translateX("+leftPos+"px");
+			 var cssValue = "translateY("+leftPos+"px) translateX("+topPos+"px)";
 			 
 			 //$(this).css("background-color","#487B9A");
 			 $(this).css("background-color",colors[layerNo]);
@@ -174,23 +143,7 @@ function ChangeDiv()
 			 myText.push(leftPos);
 			 myText.push(topPos);
 			 rainDrops.push(myText);
-			 //$(this).text("");
-			 
-			 			 //var elem = $(this).context;
-//			 
-//			 transition = new Transition(elem);
-//			 transform = new Transform(elem);
-			 
-			 //$("'#"+$(this).attr('id')+"'").setTransition({
-																											
-			/* $(this).setTransition({
-  	property: 'transform',
-  	'timing-function': 'ease-in',
- 	 duration: '2s'
-	}).translate({
-		x:(leftPos/parseInt($(this).width()))*100,
-		y:(topPos/parseInt($(this).height()))*100
-	});*/
+
 			 
 			 //$(this).mouseover(Rotate);
 			 $(this).click({top:topPos,left:(leftPos+6), height:myheight, 
@@ -204,7 +157,7 @@ function ShowmyDiv(event)
 if(showDivDisabled)
 	return;
 	
-me = event.target;
+var me = event.target;
 
 var myDiv = $("#displayTitle"+event.data.id);
 
@@ -252,60 +205,21 @@ var elem = rainDrops[i];
 
 function onScrolled(event, delta)
 {
-scrollPos = delta;
+var scrollPos = delta;
 
-for(i=0;i<3;i++)
+for(i=0;i<layerCount;i++)
 	{
-		containerName = "layerDiv_"+i;
+		var containerName = "layerDiv_"+i;
 		
-		AnimateTranslateZ(containerName, 10*delta,100);	
-				
-		/*myPerspective =	$("#"+containerName).css(prefix + "transform");
-		myPerspectiveArr = matrix2Array(myPerspective);
-		
-		var transZ = 0;
-		if(myPerspectiveArr.length==16)
-			transZ = parseInt(myPerspectiveArr[14]);
-			
-		transZ+=10*delta;
-		
-		transZ = transZ>100?-500:transZ;
-		transZ = transZ<-500?100:transZ;
-		
-		
-		$("#"+containerName).css(prefix + "transform","translateZ("+transZ+"px)");*/
-		
-		/*	
-		$("."+containerName).each(function(delta)
-		{
-			transform = $(this).css(prefix + "transform");
-			if(transform == "none")
-  			{
-  				alert("Empty transform array");
-  			}
-			arr = matrix2Array(transform);
-											   
-			newX = (delta/parseInt($(this).width()))*100;
-							   
-			$(this).setTransition({
-  				property: 'transform',
-  				'timing-function': 'ease-in',
- 	 			duration: '2s'
-				}).translate({
-					x:newX,
-					y:(delta/parseInt($(this).css('height')))*100
-					}); 
-		}
-		);
-		*/
+		AnimateTranslateZ(containerName, 10*delta,100);					
 	}
 	
 }
 	
 	function matrix2Array(matrix)
 	{
-	subst =matrix.substr(8,matrix.length-8); 
-	substArray = subst.split(', ');
+	var subst =matrix.substr(8,matrix.length-8); 
+	var substArray = subst.split(', ');
 	return substArray;
 	}
 	
@@ -315,12 +229,10 @@ function AnimateTranslateZ(p_id, p_zDiff, p_duration)
 	ModifyZ(p_id, f_interval,p_zDiff);
 }
 
-intervalList=[];
-
 function ModifyZ(myId, myInterval,dZ)
 {
-	f_transform =$("#"+myId).css(prefix + "transform");
-	f_transformArr = matrix2Array(f_transform);
+	var f_transform =$("#"+myId).css(prefix + "transform");
+	var f_transformArr = matrix2Array(f_transform);
 		
 	var f_transZ = 0;
 	if(f_transformArr.length==16)
